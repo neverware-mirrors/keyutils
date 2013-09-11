@@ -1,0 +1,19 @@
+Author: Nobuhiro Iwamatsu <iwamatsu@debian.org>
+Description: Avoid setting Intel Architecture specific CFLAGS (Closes: #638925).
+
+diff -Naurp keyutils.orig/Makefile keyutils/Makefile
+--- keyutils.orig/Makefile
++++ keyutils/Makefile
+@@ -56,12 +56,10 @@ BUILDFOR	:= $(shell file /usr/bin/make |
+ LNS		:= ln -sf
+ 
+ ifeq ($(BUILDFOR),32-bit)
+-CFLAGS		+= -m32
+ LIBDIR		:= /lib
+ USRLIBDIR	:= /usr/lib
+ else
+ ifeq ($(BUILDFOR),64-bit)
+-CFLAGS		+= -m64
+ LIBDIR		:= /lib64
+ USRLIBDIR	:= /usr/lib64
+ endif

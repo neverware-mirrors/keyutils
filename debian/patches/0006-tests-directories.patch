@@ -1,0 +1,19 @@
+Author: Daniel Baumann <mail@daniel-baumann.ch>
+Description:
+ Use change-directory instead of push- and pop-directory (Closes: #659297).
+
+diff -Naurp keyutils.orig/tests/runtest.sh keyutils/tests/runtest.sh
+--- keyutils.orig/tests/runtest.sh
++++ keyutils/tests/runtest.sh
+@@ -12,9 +12,9 @@ fi
+ 
+ for i in ${TESTS}; do
+ 	export TEST=$i
+-        pushd $i >/dev/null
++        cd $i
+ 	sh ./runtest.sh || exit 1
+-	popd >/dev/null
++	cd ${OLDPWD}
+ done
+ 
+ if [ `id -u` != 0 ]

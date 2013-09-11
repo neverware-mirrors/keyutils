@@ -1,0 +1,21 @@
+Author: Daniel Baumann <mail@daniel-baumann.ch>
+Description:
+ Use keyctl from the current build rather the one from system (Closes: #659299).
+
+diff -Naurp keyutils.orig/tests/prepare.inc.sh keyutils/tests/prepare.inc.sh
+--- keyutils.orig/tests/prepare.inc.sh
++++ keyutils/tests/prepare.inc.sh
+@@ -1,10 +1,12 @@
+ # preparation script for running keyring tests
+ 
++alias keyctl="../../../../keyctl"
++
+ # --- need to run in own session keyring
+ if [ "x`keyctl rdescribe @s | sed 's/.*;//'`" != "xRHTS/keyctl/$$" ]
+ then
+     echo "Running with session keyring RHTS/keyctl/$$"
+-    exec keyctl session "RHTS/keyctl/$$" sh $0 $@ || exit 8
++    keyctl session "RHTS/keyctl/$$" sh $0 $@ || exit 8
+ fi
+ 
+ # Set up for the Red Hat Test System
