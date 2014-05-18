@@ -10,6 +10,10 @@
 #
 ###############################################################################
 
+# Find the relative path from pwd to the directory holding this file
+includes=${BASH_SOURCE[0]}
+includes=${includes%/*}/
+
 echo === $OUTPUTFILE ===
 
 endian=`file -L /proc/$$/exe`
@@ -80,70 +84,7 @@ function toolbox_report_result()
     fi
 }
 
-###############################################################################
-#
-# compare version numbers to see if the first is less (older) than the second
-#
-###############################################################################
-function version_less_than ()
-{
-    a=$1
-    b=$2
-
-    if [ "$a" = "$b" ]
-    then
-	return 1
-    fi
-
-    # grab the leaders
-    x=${a%%-*}
-    y=${b%%-*}
-
-    if [ "$x" = "$a" -o "$y" = "$b" ]
-    then
-	if [ "$x" = "$y" ]
-	then
-	    [ "$x" = "$a" ]
-	else
-	    __version_less_than_dot "$x" "$y"
-	fi
-    elif [ "$x" = "$y" ]
-    then
-	less_than "${a#*-}" "${b#*-}"
-    else
-	__version_less_than_dot "$x" "$y"
-    fi
-}
-
-function __version_less_than_dot ()
-{
-    a=$1
-    b=$2
-
-    if [ "$a" = "$b" ]
-    then
-	return 1
-    fi
-
-    # grab the leaders
-    x=${a%%.*}
-    y=${b%%.*}
-
-    if [ "$x" = "$a" -o "$y" = "$b" ]
-    then
-	if [ "$x" = "$y" ]
-	then
-	    [ "$x" = "$a" ]
-	else
-	    expr "$x" \< "$y" >/dev/null
-	fi
-    elif [ "$x" = "$y" ]
-    then
-	__version_less_than_dot "${a#*.}" "${b#*.}"
-    else
-	expr "$x" \< "$y" >/dev/null
-    fi
-}
+. $includes/version.inc.sh
 
 ###############################################################################
 #
@@ -419,6 +360,31 @@ function pcreate_key ()
 
 ###############################################################################
 #
+# create a key and attach it to the new keyring, piping in the data
+#
+###############################################################################
+function pcreate_key_by_size ()
+{
+    my_exitval=0
+    if [ "x$1" = "x--fail" ]
+    then
+	my_exitval=1
+	shift
+    fi
+
+    data="$1"
+    shift
+
+    echo dd if=/dev/zero count=1 bs=$data \| keyctl padd "$@" >>$OUTPUTFILE
+    dd if=/dev/zero count=1 bs=$data 2>/dev/null | keyctl padd "$@" >>$OUTPUTFILE 2>&1
+    if [ $? != $my_exitval ]
+    then
+	failed
+    fi
+}
+
+###############################################################################
+#
 # create a key and attach it to the new keyring
 #
 ###############################################################################
@@ -673,6 +639,28 @@ function pipe_key ()
 
     echo keyctl pipe $1 >>$OUTPUTFILE
     keyctl pipe $1 >>$OUTPUTFILE 2>&1
+    if [ $? != $my_exitval ]
+    then
+	failed
+    fi
+}
+
+###############################################################################
+#
+# pipe a key's raw payload through md5sum
+#
+###############################################################################
+function md5sum_key ()
+{
+    my_exitval=0
+    if [ "x$1" = "x--fail" ]
+    then
+	my_exitval=1
+	shift
+    fi
+
+    echo keyctl pipe $1 \| md5sum \| cut -c1-32 >>$OUTPUTFILE
+    keyctl pipe $1 | md5sum | cut -c1-32 >>$OUTPUTFILE 2>&1
     if [ $? != $my_exitval ]
     then
 	failed
@@ -1062,6 +1050,28 @@ function timeout_key ()
 
     echo keyctl timeout $1 $2 >>$OUTPUTFILE
     keyctl timeout $1 $2 >>$OUTPUTFILE 2>&1
+    if [ $? != $my_exitval ]
+    then
+	failed
+    fi
+}
+
+###############################################################################
+#
+# Invalidate a key
+#
+###############################################################################
+function invalidate_key ()
+{
+    my_exitval=0
+    if [ "x$1" = "x--fail" ]
+    then
+	my_exitval=1
+	shift
+    fi
+
+    echo keyctl invalidate $1 >>$OUTPUTFILE
+    keyctl invalidate $1 >>$OUTPUTFILE 2>&1
     if [ $? != $my_exitval ]
     then
 	failed
