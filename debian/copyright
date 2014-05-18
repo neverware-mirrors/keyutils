@@ -4,11 +4,11 @@ Upstream-Contact: David Howells <dhowells@redhat.com>
 Source: http://people.redhat.com/~dhowells/keyutils/
 
 Files: keyctl* request-key*
-Copyright: 2005-2011 Red Hat <http://www.redhat.com/>
+Copyright: 2005-2014 Red Hat <http://www.redhat.com/>
 License: GPL-2+
 
 Files: keyutils.*
-Copyright: 2005-2011 Red Hat <http://www.redhat.com/>
+Copyright: 2005-2014 Red Hat <http://www.redhat.com/>
 License: LGPL-2+
 
 Files: debian/*
