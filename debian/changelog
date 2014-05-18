@@ -1,3 +1,60 @@
+keyutils (1.5.9-1) unstable; urgency=low
+
+  * New upstream release. Closes: #741336
+    - New man pages in section 7
+    - New functions in libkeyutils1:
+      + keyctl_get_persistent
+      + find_key_by_type_and_desc
+  * debian/control:
+    - Set myself to the new Maintainer. Closes: #748488
+    - Bump Standards-Version to 3.9.5 (no changes needed)
+    - Add XS-Testsuite: autopkgtest
+    - Add Vcs-* URLs
+  * debian/rules:
+    - dpkg-deb uses xz compression by default now, no need to request it
+    - Explicitly set DEB_HOST_MULTIARCH
+    - override_dh_auto_test: execute tests with a modified PATH and
+      LD_LIBRARY_PATH so that the build result is tested instead of the
+      installed versions. Furthermore, skip tests requiring root.
+  * debian/source/options:
+    - Remove (xz compression is the default now)
+  * debian/copyright:
+    - Update copyright for upstream, Luk, and myself
+  * debian/libkeyutils1.symbols:
+    - Add symbols file based on upstream's versioning and past Debian
+      releases
+  * debian/doc:
+    - Include upstream's README and SUBMITTING_PATCHES
+  * debian/tests/*:
+    - Create an autopkgtest with executes upstream's runtime tests. Indicate
+      that they require root privileges.
+  * debian/patches (dropped, broken):
+    - 0007-tests-keyctl
+  * debian/patches (dropped, fixed/included upstream):
+    - 0001-memleak-from-realloc
+    - 0002-another-memleak
+  * debian/patches (refreshed, DEP3-formatted):
+    - 0003-cifs
+    - 0004-cflags
+    - 0005-hardening
+    - 0006-tests-directories
+  * debian/patches (added):
+    - 0008-man-page-syntax-fixes
+      Fix minor syntax errors in man pages, thereby resolving lintian warnings
+    - 0009-Use-bash-to-execute-the-tests
+      The test fixtures make heavy use of bashisms; removal should be
+      discussed/coordinated with upstream first
+    - 0010-enable-skipping-tests-req-root
+      Allow skipping of tests that need root privileges (which we don't have at
+      build time).
+    - 0011-Disable-some-tests
+      Some test do not properly check whether features they need are available.
+      This will be fixed in the next upstream release.
+    - 0012-Remove-RHEL-specific-feature-test
+      The numeric test clashes with "unstable" as a release version.
+
+ -- Christian Kastner <debian@kvr.at>  Sun, 18 May 2014 15:22:19 +0200
+
 keyutils (1.5.6-1) unstable; urgency=low
 
   * New upstream release.
