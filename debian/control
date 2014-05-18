@@ -1,7 +1,7 @@
 Source: keyutils
 Section: admin
 Priority: optional
-Maintainer: Luk Claes <luk@debian.org>
+Maintainer: Christian Kastner <debian@kvr.at>
 Build-Depends: debhelper (>= 9), lsb-release
 Standards-Version: 3.9.4
 Homepage: http://people.redhat.com/~dhowells/keyutils/
