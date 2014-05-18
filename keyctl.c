@@ -22,47 +22,50 @@
 #include "keyutils.h"
 
 struct command {
-	int (*action)(int argc, char *argv[]);
+	void (*action)(int argc, char *argv[]) __attribute__((noreturn));
 	const char	*name;
 	const char	*format;
 };
 
-static int act_keyctl___version(int argc, char *argv[]);
-static int act_keyctl_show(int argc, char *argv[]);
-static int act_keyctl_add(int argc, char *argv[]);
-static int act_keyctl_padd(int argc, char *argv[]);
-static int act_keyctl_request(int argc, char *argv[]);
-static int act_keyctl_request2(int argc, char *argv[]);
-static int act_keyctl_prequest2(int argc, char *argv[]);
-static int act_keyctl_update(int argc, char *argv[]);
-static int act_keyctl_pupdate(int argc, char *argv[]);
-static int act_keyctl_newring(int argc, char *argv[]);
-static int act_keyctl_revoke(int argc, char *argv[]);
-static int act_keyctl_clear(int argc, char *argv[]);
-static int act_keyctl_link(int argc, char *argv[]);
-static int act_keyctl_unlink(int argc, char *argv[]);
-static int act_keyctl_search(int argc, char *argv[]);
-static int act_keyctl_read(int argc, char *argv[]);
-static int act_keyctl_pipe(int argc, char *argv[]);
-static int act_keyctl_print(int argc, char *argv[]);
-static int act_keyctl_list(int argc, char *argv[]);
-static int act_keyctl_rlist(int argc, char *argv[]);
-static int act_keyctl_describe(int argc, char *argv[]);
-static int act_keyctl_rdescribe(int argc, char *argv[]);
-static int act_keyctl_chown(int argc, char *argv[]);
-static int act_keyctl_chgrp(int argc, char *argv[]);
-static int act_keyctl_setperm(int argc, char *argv[]);
-static int act_keyctl_session(int argc, char *argv[]);
-static int act_keyctl_instantiate(int argc, char *argv[]);
-static int act_keyctl_pinstantiate(int argc, char *argv[]);
-static int act_keyctl_negate(int argc, char *argv[]);
-static int act_keyctl_timeout(int argc, char *argv[]);
-static int act_keyctl_security(int argc, char *argv[]);
-static int act_keyctl_new_session(int argc, char *argv[]);
-static int act_keyctl_reject(int argc, char *argv[]);
-static int act_keyctl_reap(int argc, char *argv[]);
-static int act_keyctl_purge(int argc, char *argv[]);
-static int act_keyctl_invalidate(int argc, char *argv[]);
+#define nr __attribute__((noreturn))
+
+static nr void act_keyctl___version(int argc, char *argv[]);
+static nr void act_keyctl_show(int argc, char *argv[]);
+static nr void act_keyctl_add(int argc, char *argv[]);
+static nr void act_keyctl_padd(int argc, char *argv[]);
+static nr void act_keyctl_request(int argc, char *argv[]);
+static nr void act_keyctl_request2(int argc, char *argv[]);
+static nr void act_keyctl_prequest2(int argc, char *argv[]);
+static nr void act_keyctl_update(int argc, char *argv[]);
+static nr void act_keyctl_pupdate(int argc, char *argv[]);
+static nr void act_keyctl_newring(int argc, char *argv[]);
+static nr void act_keyctl_revoke(int argc, char *argv[]);
+static nr void act_keyctl_clear(int argc, char *argv[]);
+static nr void act_keyctl_link(int argc, char *argv[]);
+static nr void act_keyctl_unlink(int argc, char *argv[]);
+static nr void act_keyctl_search(int argc, char *argv[]);
+static nr void act_keyctl_read(int argc, char *argv[]);
+static nr void act_keyctl_pipe(int argc, char *argv[]);
+static nr void act_keyctl_print(int argc, char *argv[]);
+static nr void act_keyctl_list(int argc, char *argv[]);
+static nr void act_keyctl_rlist(int argc, char *argv[]);
+static nr void act_keyctl_describe(int argc, char *argv[]);
+static nr void act_keyctl_rdescribe(int argc, char *argv[]);
+static nr void act_keyctl_chown(int argc, char *argv[]);
+static nr void act_keyctl_chgrp(int argc, char *argv[]);
+static nr void act_keyctl_setperm(int argc, char *argv[]);
+static nr void act_keyctl_session(int argc, char *argv[]);
+static nr void act_keyctl_instantiate(int argc, char *argv[]);
+static nr void act_keyctl_pinstantiate(int argc, char *argv[]);
+static nr void act_keyctl_negate(int argc, char *argv[]);
+static nr void act_keyctl_timeout(int argc, char *argv[]);
+static nr void act_keyctl_security(int argc, char *argv[]);
+static nr void act_keyctl_new_session(int argc, char *argv[]);
+static nr void act_keyctl_reject(int argc, char *argv[]);
+static nr void act_keyctl_reap(int argc, char *argv[]);
+static nr void act_keyctl_purge(int argc, char *argv[]);
+static nr void act_keyctl_invalidate(int argc, char *argv[]);
+static nr void act_keyctl_get_persistent(int argc, char *argv[]);
 
 const struct command commands[] = {
 	{ act_keyctl___version,	"--version",	"" },
@@ -73,6 +76,7 @@ const struct command commands[] = {
 	{ act_keyctl_describe,	"describe",	"<keyring>" },
 	{ act_keyctl_instantiate, "instantiate","<key> <data> <keyring>" },
 	{ act_keyctl_invalidate,"invalidate",	"<key>" },
+	{ act_keyctl_get_persistent, "get_persistent", "<keyring> [<uid>]" },
 	{ act_keyctl_link,	"link",		"<key> <keyring>" },
 	{ act_keyctl_list,	"list",		"<keyring>" },
 	{ act_keyctl_negate,	"negate",	"<key> <timeout> <keyring>" },
@@ -111,7 +115,7 @@ const struct command commands[] = {
 static int dump_key_tree(key_serial_t keyring, const char *name, int hex_key_IDs);
 static void format(void) __attribute__((noreturn));
 static void error(const char *msg) __attribute__((noreturn));
-static key_serial_t get_key_id(const char *arg);
+static key_serial_t get_key_id(char *arg);
 
 static uid_t myuid;
 static gid_t mygid, *mygroups;
@@ -151,6 +155,8 @@ int main(int argc, char *argv[])
 	for (cmd = commands; cmd->name; cmd++) {
 		if (!cmd->action)
 			continue;
+		if (strlen(cmd->name) > n)
+			continue;
 		if (memcmp(cmd->name, *argv, n) != 0)
 			continue;
 
@@ -174,23 +180,7 @@ int main(int argc, char *argv[])
 		exit(2);
 	}
 
-	/* grab my UID, GID and groups */
-	myuid = geteuid();
-	mygid = getegid();
-	myngroups = getgroups(0, NULL);
-
-	if (myuid == -1 || mygid == -1 || myngroups == -1)
-		error("Unable to get UID/GID/#Groups\n");
-
-	mygroups = calloc(myngroups, sizeof(gid_t));
-	if (!mygroups)
-		error("calloc");
-
-	myngroups = getgroups(myngroups, mygroups);
-	if (myngroups < 0)
-		error("Unable to get Groups\n");
-
-	return best->action(argc, argv);
+	best->action(argc, argv);
 
 } /* end main() */
 
@@ -229,11 +219,11 @@ static void format(void)
 /*
  * Display version information
  */
-static int act_keyctl___version(int argc, char *argv[])
+static void act_keyctl___version(int argc, char *argv[])
 {
 	printf("keyctl from %s (Built %s)\n",
 	       keyutils_version_string, keyutils_build_string);
-	return 0;
+	exit(0);
 }
 
 /*****************************************************************************/
@@ -270,6 +260,34 @@ static char *grab_stdin(size_t *_size)
 
 } /* end grab_stdin() */
 
+/*
+ * Load the groups list and grab the process's UID and GID.
+ */
+static void grab_creds(void)
+{
+	static int inited;
+
+	if (inited)
+		return;
+	inited = 1;
+
+	/* grab my UID, GID and groups */
+	myuid = geteuid();
+	mygid = getegid();
+	myngroups = getgroups(0, NULL);
+
+	if (myuid == -1 || mygid == -1 || myngroups == -1)
+		error("Unable to get UID/GID/#Groups\n");
+
+	mygroups = calloc(myngroups, sizeof(gid_t));
+	if (!mygroups)
+		error("calloc");
+
+	myngroups = getgroups(myngroups, mygroups);
+	if (myngroups < 0)
+		error("Unable to get Groups\n");
+}
+
 /*****************************************************************************/
 /*
  * convert the permissions mask to a string representing the permissions we
@@ -280,6 +298,8 @@ static void calc_perms(char *pretty, key_perm_t perm, uid_t uid, gid_t gid)
 	unsigned perms;
 	gid_t *pg;
 	int loop;
+
+	grab_creds();
 
 	perms = (perm & KEY_POS_ALL) >> 24;
 
@@ -320,7 +340,7 @@ write_mask:
 /*
  * show the parent process's session keyring
  */
-static int act_keyctl_show(int argc, char *argv[])
+static void act_keyctl_show(int argc, char *argv[])
 {
 	key_serial_t keyring = KEY_SPEC_SESSION_KEYRING;
 	int hex_key_IDs = 0;
@@ -338,7 +358,7 @@ static int act_keyctl_show(int argc, char *argv[])
 		keyring = get_key_id(argv[1]);
 
 	dump_key_tree(keyring, argc == 2 ? "Keyring" : "Session Keyring", hex_key_IDs);
-	return 0;
+	exit(0);
 
 } /* end act_keyctl_show() */
 
@@ -346,7 +366,7 @@ static int act_keyctl_show(int argc, char *argv[])
 /*
  * add a key
  */
-static int act_keyctl_add(int argc, char *argv[])
+static void act_keyctl_add(int argc, char *argv[])
 {
 	key_serial_t dest;
 	int ret;
@@ -362,7 +382,7 @@ static int act_keyctl_add(int argc, char *argv[])
 
 	/* print the resulting key ID */
 	printf("%d\n", ret);
-	return 0;
+	exit(0);
 
 } /* end act_keyctl_add() */
 
@@ -370,7 +390,7 @@ static int act_keyctl_add(int argc, char *argv[])
 /*
  * add a key, reading from a pipe
  */
-static int act_keyctl_padd(int argc, char *argv[])
+static void act_keyctl_padd(int argc, char *argv[])
 {
 	key_serial_t dest;
 	size_t datalen;
@@ -391,7 +411,7 @@ static int act_keyctl_padd(int argc, char *argv[])
 
 	/* print the resulting key ID */
 	printf("%d\n", ret);
-	return 0;
+	exit(0);
 
 } /* end act_keyctl_padd() */
 
@@ -399,7 +419,7 @@ static int act_keyctl_padd(int argc, char *argv[])
 /*
  * request a key
  */
-static int act_keyctl_request(int argc, char *argv[])
+static void act_keyctl_request(int argc, char *argv[])
 {
 	key_serial_t dest;
 	int ret;
@@ -417,7 +437,7 @@ static int act_keyctl_request(int argc, char *argv[])
 
 	/* print the resulting key ID */
 	printf("%d\n", ret);
-	return 0;
+	exit(0);
 
 } /* end act_keyctl_request() */
 
@@ -425,7 +445,7 @@ static int act_keyctl_request(int argc, char *argv[])
 /*
  * request a key, with recourse to /sbin/request-key
  */
-static int act_keyctl_request2(int argc, char *argv[])
+static void act_keyctl_request2(int argc, char *argv[])
 {
 	key_serial_t dest;
 	int ret;
@@ -443,7 +463,7 @@ static int act_keyctl_request2(int argc, char *argv[])
 
 	/* print the resulting key ID */
 	printf("%d\n", ret);
-	return 0;
+	exit(0);
 
 } /* end act_keyctl_request2() */
 
@@ -452,7 +472,7 @@ static int act_keyctl_request2(int argc, char *argv[])
  * request a key, with recourse to /sbin/request-key, reading the callout info
  * from a pipe
  */
-static int act_keyctl_prequest2(int argc, char *argv[])
+static void act_keyctl_prequest2(int argc, char *argv[])
 {
 	char *args[6];
 	size_t datalen;
@@ -467,7 +487,7 @@ static int act_keyctl_prequest2(int argc, char *argv[])
 	args[4] = argv[3];
 	args[5] = NULL;
 
-	return act_keyctl_request2(argc + 1, args);
+	act_keyctl_request2(argc + 1, args);
 
 } /* end act_keyctl_prequest2() */
 
@@ -475,7 +495,7 @@ static int act_keyctl_prequest2(int argc, char *argv[])
 /*
  * update a key
  */
-static int act_keyctl_update(int argc, char *argv[])
+static void act_keyctl_update(int argc, char *argv[])
 {
 	key_serial_t key;
 
@@ -487,7 +507,7 @@ static int act_keyctl_update(int argc, char *argv[])
 	if (keyctl_update(key, argv[2], strlen(argv[2])) < 0)
 		error("keyctl_update");
 
-	return 0;
+	exit(0);
 
 } /* end act_keyctl_update() */
 
@@ -495,7 +515,7 @@ static int act_keyctl_update(int argc, char *argv[])
 /*
  * update a key, reading from a pipe
  */
-static int act_keyctl_pupdate(int argc, char *argv[])
+static void act_keyctl_pupdate(int argc, char *argv[])
 {
 	key_serial_t key;
 	size_t datalen;
@@ -510,7 +530,7 @@ static int act_keyctl_pupdate(int argc, char *argv[])
 	if (keyctl_update(key, data, datalen) < 0)
 		error("keyctl_update");
 
-	return 0;
+	exit(0);
 
 } /* end act_keyctl_pupdate() */
 
@@ -518,7 +538,7 @@ static int act_keyctl_pupdate(int argc, char *argv[])
 /*
  * create a new keyring
  */
-static int act_keyctl_newring(int argc, char *argv[])
+static void act_keyctl_newring(int argc, char *argv[])
 {
 	key_serial_t dest;
 	int ret;
@@ -533,7 +553,7 @@ static int act_keyctl_newring(int argc, char *argv[])
 		error("add_key");
 
 	printf("%d\n", ret);
-	return 0;
+	exit(0);
 
 } /* end act_keyctl_newring() */
 
@@ -541,7 +561,7 @@ static int act_keyctl_newring(int argc, char *argv[])
 /*
  * revoke a key
  */
-static int act_keyctl_revoke(int argc, char *argv[])
+static void act_keyctl_revoke(int argc, char *argv[])
 {
 	key_serial_t key;
 
@@ -553,7 +573,7 @@ static int act_keyctl_revoke(int argc, char *argv[])
 	if (keyctl_revoke(key) < 0)
 		error("keyctl_revoke");
 
-	return 0;
+	exit(0);
 
 } /* end act_keyctl_revoke() */
 
@@ -561,7 +581,7 @@ static int act_keyctl_revoke(int argc, char *argv[])
 /*
  * clear a keyring
  */
-static int act_keyctl_clear(int argc, char *argv[])
+static void act_keyctl_clear(int argc, char *argv[])
 {
 	key_serial_t keyring;
 
@@ -573,7 +593,7 @@ static int act_keyctl_clear(int argc, char *argv[])
 	if (keyctl_clear(keyring) < 0)
 		error("keyctl_clear");
 
-	return 0;
+	exit(0);
 
 } /* end act_keyctl_clear() */
 
@@ -581,7 +601,7 @@ static int act_keyctl_clear(int argc, char *argv[])
 /*
  * link a key to a keyring
  */
-static int act_keyctl_link(int argc, char *argv[])
+static void act_keyctl_link(int argc, char *argv[])
 {
 	key_serial_t keyring, key;
 
@@ -594,7 +614,7 @@ static int act_keyctl_link(int argc, char *argv[])
 	if (keyctl_link(key, keyring) < 0)
 		error("keyctl_link");
 
-	return 0;
+	exit(0);
 
 } /* end act_keyctl_link() */
 
@@ -614,7 +634,7 @@ static int act_keyctl_unlink_func(key_serial_t parent, key_serial_t key,
 /*
  * Unlink a key from a keyring or from the session keyring tree.
  */
-static int act_keyctl_unlink(int argc, char *argv[])
+static void act_keyctl_unlink(int argc, char *argv[])
 {
 	key_serial_t keyring, key;
 	int n;
@@ -633,14 +653,14 @@ static int act_keyctl_unlink(int argc, char *argv[])
 		printf("%d links removed\n", n);
 	}
 
-	return 0;
+	exit(0);
 }
 
 /*****************************************************************************/
 /*
  * search a keyring for a key
  */
-static int act_keyctl_search(int argc, char *argv[])
+static void act_keyctl_search(int argc, char *argv[])
 {
 	key_serial_t keyring, dest;
 	int ret;
@@ -660,7 +680,7 @@ static int act_keyctl_search(int argc, char *argv[])
 
 	/* print the ID of the key we found */
 	printf("%d\n", ret);
-	return 0;
+	exit(0);
 
 } /* end act_keyctl_search() */
 
@@ -668,7 +688,7 @@ static int act_keyctl_search(int argc, char *argv[])
 /*
  * read a key
  */
-static int act_keyctl_read(int argc, char *argv[])
+static void act_keyctl_read(int argc, char *argv[])
 {
 	key_serial_t key;
 	void *buffer;
@@ -687,7 +707,7 @@ static int act_keyctl_read(int argc, char *argv[])
 
 	if (ret == 0) {
 		printf("No data in key\n");
-		return 0;
+		exit(0);
 	}
 
 	/* hexdump the contents */
@@ -715,7 +735,7 @@ static int act_keyctl_read(int argc, char *argv[])
 	} while (--ret > 0);
 
 	printf("\n");
-	return 0;
+	exit(0);
 
 } /* end act_keyctl_read() */
 
@@ -723,7 +743,7 @@ static int act_keyctl_read(int argc, char *argv[])
 /*
  * read a key and dump raw to stdout
  */
-static int act_keyctl_pipe(int argc, char *argv[])
+static void act_keyctl_pipe(int argc, char *argv[])
 {
 	key_serial_t key;
 	void *buffer;
@@ -741,7 +761,7 @@ static int act_keyctl_pipe(int argc, char *argv[])
 
 	if (ret > 0 && write(1, buffer, ret) < 0)
 		error("write");
-	return 0;
+	exit(0);
 
 } /* end act_keyctl_pipe() */
 
@@ -749,7 +769,7 @@ static int act_keyctl_pipe(int argc, char *argv[])
 /*
  * read a key and dump to stdout in printable form
  */
-static int act_keyctl_print(int argc, char *argv[])
+static void act_keyctl_print(int argc, char *argv[])
 {
 	key_serial_t key;
 	void *buffer;
@@ -774,7 +794,7 @@ static int act_keyctl_print(int argc, char *argv[])
 
 	/* it is */
 	printf("%s\n", (char *) buffer);
-	return 0;
+	exit(0);
 
 not_printable:
 	/* it isn't */
@@ -783,7 +803,7 @@ not_printable:
 	for (loop = ret; loop > 0; loop--, p++)
 		printf("%02hhx", *p);
 	printf("\n");
-	return 0;
+	exit(0);
 
 } /* end act_keyctl_print() */
 
@@ -791,7 +811,7 @@ not_printable:
 /*
  * list a keyring
  */
-static int act_keyctl_list(int argc, char *argv[])
+static void act_keyctl_list(int argc, char *argv[])
 {
 	key_serial_t keyring, key, *pk;
 	key_perm_t perm;
@@ -815,7 +835,7 @@ static int act_keyctl_list(int argc, char *argv[])
 
 	if (count == 0) {
 		printf("keyring is empty\n");
-		return 0;
+		exit(0);
 	}
 
 	/* list the keys in the keyring */
@@ -861,7 +881,7 @@ static int act_keyctl_list(int argc, char *argv[])
 
 	} while (--count);
 
-	return 0;
+	exit(0);
 
 } /* end act_keyctl_list() */
 
@@ -869,7 +889,7 @@ static int act_keyctl_list(int argc, char *argv[])
 /*
  * produce a raw list of a keyring
  */
-static int act_keyctl_rlist(int argc, char *argv[])
+static void act_keyctl_rlist(int argc, char *argv[])
 {
 	key_serial_t keyring, key, *pk;
 	void *keylist;
@@ -899,7 +919,7 @@ static int act_keyctl_rlist(int argc, char *argv[])
 		}
 	}
 
-	return 0;
+	exit(0);
 
 } /* end act_keyctl_rlist() */
 
@@ -907,7 +927,7 @@ static int act_keyctl_rlist(int argc, char *argv[])
 /*
  * describe a key
  */
-static int act_keyctl_describe(int argc, char *argv[])
+static void act_keyctl_describe(int argc, char *argv[])
 {
 	key_serial_t key;
 	key_perm_t perm;
@@ -977,7 +997,7 @@ static int act_keyctl_describe(int argc, char *argv[])
 	       tlen, tlen, buffer,
 	       buffer + dpos);
 
-	return 0;
+	exit(0);
 
 } /* end act_keyctl_describe() */
 
@@ -985,7 +1005,7 @@ static int act_keyctl_describe(int argc, char *argv[])
 /*
  * get raw key description
  */
-static int act_keyctl_rdescribe(int argc, char *argv[])
+static void act_keyctl_rdescribe(int argc, char *argv[])
 {
 	key_serial_t key;
 	char *buffer, *q;
@@ -1012,7 +1032,7 @@ static int act_keyctl_rdescribe(int argc, char *argv[])
 
 	/* display raw description */
 	printf("%s\n", buffer);
-	return 0;
+	exit(0);
 
 } /* end act_keyctl_rdescribe() */
 
@@ -1020,7 +1040,7 @@ static int act_keyctl_rdescribe(int argc, char *argv[])
 /*
  * change a key's ownership
  */
-static int act_keyctl_chown(int argc, char *argv[])
+static void act_keyctl_chown(int argc, char *argv[])
 {
 	key_serial_t key;
 	uid_t uid;
@@ -1040,7 +1060,7 @@ static int act_keyctl_chown(int argc, char *argv[])
 	if (keyctl_chown(key, uid, -1) < 0)
 		error("keyctl_chown");
 
-	return 0;
+	exit(0);
 
 } /* end act_keyctl_chown() */
 
@@ -1048,7 +1068,7 @@ static int act_keyctl_chown(int argc, char *argv[])
 /*
  * change a key's group ownership
  */
-static int act_keyctl_chgrp(int argc, char *argv[])
+static void act_keyctl_chgrp(int argc, char *argv[])
 {
 	key_serial_t key;
 	gid_t gid;
@@ -1068,7 +1088,7 @@ static int act_keyctl_chgrp(int argc, char *argv[])
 	if (keyctl_chown(key, -1, gid) < 0)
 		error("keyctl_chown");
 
-	return 0;
+	exit(0);
 
 } /* end act_keyctl_chgrp() */
 
@@ -1076,7 +1096,7 @@ static int act_keyctl_chgrp(int argc, char *argv[])
 /*
  * set the permissions on a key
  */
-static int act_keyctl_setperm(int argc, char *argv[])
+static void act_keyctl_setperm(int argc, char *argv[])
 {
 	key_serial_t key;
 	key_perm_t perm;
@@ -1095,7 +1115,7 @@ static int act_keyctl_setperm(int argc, char *argv[])
 	if (keyctl_setperm(key, perm) < 0)
 		error("keyctl_setperm");
 
-	return 0;
+	exit(0);
 
 } /* end act_keyctl_setperm() */
 
@@ -1103,7 +1123,7 @@ static int act_keyctl_setperm(int argc, char *argv[])
 /*
  * start a process in a new session
  */
-static int act_keyctl_session(int argc, char *argv[])
+static void act_keyctl_session(int argc, char *argv[])
 {
 	char *p, *q;
 	int ret;
@@ -1150,7 +1170,7 @@ static int act_keyctl_session(int argc, char *argv[])
 /*
  * instantiate a key that's under construction
  */
-static int act_keyctl_instantiate(int argc, char *argv[])
+static void act_keyctl_instantiate(int argc, char *argv[])
 {
 	key_serial_t key, dest;
 
@@ -1163,7 +1183,7 @@ static int act_keyctl_instantiate(int argc, char *argv[])
 	if (keyctl_instantiate(key, argv[2], strlen(argv[2]), dest) < 0)
 		error("keyctl_instantiate");
 
-	return 0;
+	exit(0);
 
 } /* end act_keyctl_instantiate() */
 
@@ -1171,7 +1191,7 @@ static int act_keyctl_instantiate(int argc, char *argv[])
 /*
  * instantiate a key, reading from a pipe
  */
-static int act_keyctl_pinstantiate(int argc, char *argv[])
+static void act_keyctl_pinstantiate(int argc, char *argv[])
 {
 	key_serial_t key, dest;
 	size_t datalen;
@@ -1187,7 +1207,7 @@ static int act_keyctl_pinstantiate(int argc, char *argv[])
 	if (keyctl_instantiate(key, data, datalen, dest) < 0)
 		error("keyctl_instantiate");
 
-	return 0;
+	exit(0);
 
 } /* end act_keyctl_pinstantiate() */
 
@@ -1195,7 +1215,7 @@ static int act_keyctl_pinstantiate(int argc, char *argv[])
 /*
  * negate a key that's under construction
  */
-static int act_keyctl_negate(int argc, char *argv[])
+static void act_keyctl_negate(int argc, char *argv[])
 {
 	unsigned long timeout;
 	key_serial_t key, dest;
@@ -1217,7 +1237,7 @@ static int act_keyctl_negate(int argc, char *argv[])
 	if (keyctl_negate(key, timeout, dest) < 0)
 		error("keyctl_negate");
 
-	return 0;
+	exit(0);
 
 } /* end act_keyctl_negate() */
 
@@ -1225,7 +1245,7 @@ static int act_keyctl_negate(int argc, char *argv[])
 /*
  * set a key's timeout
  */
-static int act_keyctl_timeout(int argc, char *argv[])
+static void act_keyctl_timeout(int argc, char *argv[])
 {
 	unsigned long timeout;
 	key_serial_t key;
@@ -1245,7 +1265,7 @@ static int act_keyctl_timeout(int argc, char *argv[])
 	if (keyctl_set_timeout(key, timeout) < 0)
 		error("keyctl_set_timeout");
 
-	return 0;
+	exit(0);
 
 } /* end act_keyctl_timeout() */
 
@@ -1253,7 +1273,7 @@ static int act_keyctl_timeout(int argc, char *argv[])
 /*
  * get a key's security label
  */
-static int act_keyctl_security(int argc, char *argv[])
+static void act_keyctl_security(int argc, char *argv[])
 {
 	key_serial_t key;
 	char *buffer;
@@ -1270,14 +1290,14 @@ static int act_keyctl_security(int argc, char *argv[])
 		error("keyctl_getsecurity");
 
 	printf("%s\n", buffer);
-	return 0;
+	exit(0);
 }
 
 /*****************************************************************************/
 /*
  * install a new session keyring on the parent process
  */
-static int act_keyctl_new_session(int argc, char *argv[])
+static void act_keyctl_new_session(int argc, char *argv[])
 {
 	key_serial_t keyring;
 
@@ -1296,14 +1316,14 @@ static int act_keyctl_new_session(int argc, char *argv[])
 
 	/* print the resulting key ID */
 	printf("%d\n", keyring);
-	return 0;
+	exit(0);
 }
 
 /*****************************************************************************/
 /*
  * reject a key that's under construction
  */
-static int act_keyctl_reject(int argc, char *argv[])
+static void act_keyctl_reject(int argc, char *argv[])
 {
 	unsigned long timeout;
 	key_serial_t key, dest;
@@ -1340,7 +1360,7 @@ static int act_keyctl_reject(int argc, char *argv[])
 	if (keyctl_reject(key, timeout, rejerr, dest) < 0)
 		error("keyctl_negate");
 
-	return 0;
+	exit(0);
 }
 
 /*
@@ -1369,7 +1389,7 @@ static int act_keyctl_reap_func(key_serial_t parent, key_serial_t key,
 /*
  * Reap the dead keys from the session keyring tree
  */
-static int act_keyctl_reap(int argc, char *argv[])
+static void act_keyctl_reap(int argc, char *argv[])
 {
 	int n;
 
@@ -1384,7 +1404,7 @@ static int act_keyctl_reap(int argc, char *argv[])
 
 	n = recursive_session_key_scan(act_keyctl_reap_func, NULL);
 	printf("%d keys reaped\n", n);
-	return 0;
+	exit(0);
 }
 
 struct purge_data {
@@ -1498,7 +1518,7 @@ static int act_keyctl_purge_search_func(key_serial_t parent, key_serial_t keyrin
 /*
  * Purge matching keys from a keyring
  */
-static int act_keyctl_purge(int argc, char *argv[])
+static void act_keyctl_purge(int argc, char *argv[])
 {
 	recursive_key_scanner_t func;
 	struct purge_data purge = {
@@ -1551,14 +1571,14 @@ static int act_keyctl_purge(int argc, char *argv[])
 
 	n = recursive_session_key_scan(func, &purge);
 	printf("purged %d keys\n", n);
-	return 0;
+	exit(0);
 }
 
 /*****************************************************************************/
 /*
  * Invalidate a key
  */
-static int act_keyctl_invalidate(int argc, char *argv[])
+static void act_keyctl_invalidate(int argc, char *argv[])
 {
 	key_serial_t key;
 
@@ -1570,14 +1590,46 @@ static int act_keyctl_invalidate(int argc, char *argv[])
 	if (keyctl_invalidate(key) < 0)
 		error("keyctl_invalidate");
 
-	return 0;
+	exit(0);
+}
+
+/*****************************************************************************/
+/*
+ * Get the per-UID persistent keyring
+ */
+static void act_keyctl_get_persistent(int argc, char *argv[])
+{
+	key_serial_t dest, ret;
+	uid_t uid = -1;
+	char *q;
+
+	if (argc != 2 && argc != 3)
+		format();
+
+	dest = get_key_id(argv[1]);
+
+	if (argc > 2) {
+		uid = strtoul(argv[2], &q, 0);
+		if (*q) {
+			fprintf(stderr, "Unparsable uid: '%s'\n", argv[2]);
+			exit(2);
+		}
+	}
+
+	ret = keyctl_get_persistent(uid, dest);
+	if (ret < 0)
+		error("keyctl_get_persistent");
+
+	/* print the resulting key ID */
+	printf("%d\n", ret);
+	exit(0);
 }
 
 /*****************************************************************************/
 /*
  * parse a key identifier
  */
-static key_serial_t get_key_id(const char *arg)
+static key_serial_t get_key_id(char *arg)
 {
 	key_serial_t id;
 	char *end;
@@ -1596,6 +1648,36 @@ static key_serial_t get_key_id(const char *arg)
 		exit(2);
 	}
 
+	/* handle a lookup-by-name request "%<type>:<desc>", eg: "%keyring:_ses" */
+	if (arg[0] == '%') {
+		char *type;
+
+		arg++;
+		if (!*arg)
+			goto incorrect_key_by_name_spec;
+
+		if (*arg == ':') {
+			type = "keyring";
+			arg++;
+		} else {
+			type = arg;
+			arg = strchr(arg, ':');
+			if (!arg)
+				goto incorrect_key_by_name_spec;
+			*(arg++) = '\0';
+		}
+
+		if (!*arg)
+			goto incorrect_key_by_name_spec;
+
+		id = find_key_by_type_and_desc(type, arg, 0);
+		if (id == -1) {
+			fprintf(stderr, "Can't find '%s:%s'\n", type, arg);
+			exit(1);
+		}
+		return id;
+	}
+
 	/* handle a numeric key ID */
 	id = strtoul(arg, &end, 0);
 	if (*end) {
@@ -1604,6 +1686,10 @@ static key_serial_t get_key_id(const char *arg)
 	}
 
 	return id;
+
+incorrect_key_by_name_spec:
+	fprintf(stderr, "Incorrect key-by-name spec\n");
+	exit(2);
 
 } /* end get_key_id() */
 
@@ -1616,7 +1702,7 @@ static int dump_key_tree_aux(key_serial_t key, int depth, int more, int hex_key_
 	static char dumpindent[64];
 	key_serial_t *pk;
 	key_perm_t perm;
-	size_t ringlen, desclen;
+	size_t ringlen;
 	void *payload;
 	char *desc, type[255], pretty_mask[9];
 	int uid, gid, ret, n, dpos, rdepth, kcount = 0;
@@ -1624,29 +1710,12 @@ static int dump_key_tree_aux(key_serial_t key, int depth, int more, int hex_key_
 	if (depth > 8 * 4)
 		return 0;
 
-	/* find out how big this key's description is */
-	ret = keyctl_describe(key, NULL, 0);
-	if (ret < 0) {
-		printf("%d: key inaccessible (%m)\n", key);
-		return 0;
-	}
-	desclen = ret + 1;
-
-	desc = malloc(desclen);
-	if (!desc)
-		error("malloc");
-
 	/* read the description */
-	ret = keyctl_describe(key, desc, desclen);
+	ret = keyctl_describe_alloc(key, &desc);
 	if (ret < 0) {
 		printf("%d: key inaccessible (%m)\n", key);
-		free(desc);
 		return 0;
 	}
-
-	desclen = ret < desclen ? ret : desclen;
-
-	desc[desclen] = 0;
 
 	/* parse */
 	type[0] = 0;
@@ -1681,6 +1750,8 @@ static int dump_key_tree_aux(key_serial_t key, int depth, int more, int hex_key_
 		       dumpindent,
 		       depth > 0 ? "\\_ " : "",
 		       type, desc + dpos);
+
+	free(desc);
 
 	/* if it's a keyring then we're going to want to recursively
 	 * display it if we can */
@@ -1740,7 +1811,6 @@ static int dump_key_tree_aux(key_serial_t key, int depth, int more, int hex_key_
 		free(payload);
 	}
 
-	free(desc);
 	return kcount;
 
 } /* end dump_key_tree_aux() */

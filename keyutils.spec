@@ -1,10 +1,8 @@
 %define vermajor 1
-%define verminor 5.6
+%define verminor 5.9
 %define version %{vermajor}.%{verminor}
-%define libdir /%{_lib}
-%define usrlibdir %{_prefix}/%{_lib}
 %define libapivermajor 1
-%define libapiversion %{libapivermajor}.4
+%define libapiversion %{libapivermajor}.5
 
 # % define buildid .local
 
@@ -47,11 +45,19 @@ This package provides headers and libraries for building key utilities.
 %prep
 %setup -q
 
+%define datadir %{_datarootdir}/keyutils
+
 %build
 make \
 	NO_ARLIB=1 \
-	LIBDIR=%{libdir} \
-	USRLIBDIR=%{usrlibdir} \
+	ETCDIR=%{_sysconfdir} \
+	LIBDIR=%{_libdir} \
+	USRLIBDIR=%{_libdir} \
+	BINDIR=%{_bindir} \
+	SBINDIR=%{_sbindir} \
+	MANDIR=%{_mandir} \
+	INCLUDEDIR=%{_includedir} \
+	SHAREDIR=%{datadir} \
 	RELEASE=.%{release} \
 	NO_GLIBC_KEYERR=1 \
 	CFLAGS="-Wall $RPM_OPT_FLAGS -Werror"
@@ -61,8 +67,14 @@ rm -rf $RPM_BUILD_ROOT
 make \
 	NO_ARLIB=1 \
 	DESTDIR=$RPM_BUILD_ROOT \
-	LIBDIR=%{libdir} \
-	USRLIBDIR=%{usrlibdir} \
+	ETCDIR=%{_sysconfdir} \
+	LIBDIR=%{_libdir} \
+	USRLIBDIR=%{_libdir} \
+	BINDIR=%{_bindir} \
+	SBINDIR=%{_sbindir} \
+	MANDIR=%{_mandir} \
+	INCLUDEDIR=%{_includedir} \
+	SHAREDIR=%{datadir} \
 	install
 
 %clean
@@ -74,27 +86,52 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root,-)
 %doc README LICENCE.GPL
-/sbin/*
-/bin/*
-/usr/share/keyutils
+%{_sbindir}/*
+%{_bindir}/*
+%{datadir}
 %{_mandir}/man1/*
 %{_mandir}/man5/*
 %{_mandir}/man8/*
-%config(noreplace) /etc/*
+%config(noreplace) %{_sysconfdir}/*
 
 %files libs
 %defattr(-,root,root,-)
 %doc LICENCE.LGPL
-%{libdir}/libkeyutils.so.%{libapiversion}
-%{libdir}/libkeyutils.so.%{libapivermajor}
+%{_mandir}/man7/*
+%{_libdir}/libkeyutils.so.%{libapiversion}
+%{_libdir}/libkeyutils.so.%{libapivermajor}
 
 %files libs-devel
 %defattr(-,root,root,-)
-%{usrlibdir}/libkeyutils.so
+%{_libdir}/libkeyutils.so
 %{_includedir}/*
 %{_mandir}/man3/*
 
 %changelog
+* Fri Feb 21 2014 David Howells <dhowells@redhat.com> - 1.5.9-1
+- Add manpages for get_persistent.
+- Fix memory leaks in keyctl_describe/read/get_security_alloc().
+- Use keyctl_describe_alloc in dump_key_tree_aux rather than open coding it.
+- Exit rather than returning from act_xxx() functions.
+- Fix memory leak in dump_key_tree_aux.
+- Only get the groups list if we need it.
+- Don't trust sscanf's %n argument.
+- Use the correct path macros in the specfile.
+- Avoid use realloc when the memory has no content.
+- Fix a bunch of issues in key.dns_resolver.
+- Fix command table searching in keyctl utility.
+- Fix a typo in the permissions mask constants.
+- Improve the keyctl_read manpage.
+- Add man7 pages describing various keyrings concepts.
+
+* Fri Oct 4 2013 David Howells <dhowells@redhat.com> - 1.5.8-1
+- New lib symbols should go in a new library minor version.
+
+* Wed Oct 2 2013 David Howells <dhowells@redhat.com> - 1.5.7-1
+- Provide a utility function to find a key by type and name.
+- Allow keyctl commands to take a type+name arg instead of a key-id arg.
+- Add per-UID get_persistent keyring function.
+
 * Thu Aug 29 2013 David Howells <dhowells@redhat.com> - 1.5.6-1
 - Fix the request-key.conf.5 manpage.
 - Fix the max depth of key tree dump (keyctl show).
@@ -139,7 +176,7 @@ rm -rf $RPM_BUILD_ROOT
 - Add recursive scan utility function.
 - Add bad key reap command to keyctl.
 - Add multi-unlink variant to keyctl unlink command.
-- Add multi key purger command to keyctl.
+- Add multi key purge command to keyctl.
 - Handle multi-line commands in keyctl command table.
 - Move the package to version to 1.5.
 
