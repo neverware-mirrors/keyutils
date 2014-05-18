@@ -1,10 +1,15 @@
-Author: Daniel Baumann <mail@daniel-baumann.ch>
-Description:
- Use keyctl from the current build rather the one from system (Closes: #659299).
+From: Daniel Baumann <mail@daniel-baumann.ch>
+Date: Fri, 29 Jun 2012 21:01:32 +0200
+Subject: Use keyctl from the current build rather the one from system
 
-diff -Naurp keyutils.orig/tests/prepare.inc.sh keyutils/tests/prepare.inc.sh
---- keyutils.orig/tests/prepare.inc.sh
-+++ keyutils/tests/prepare.inc.sh
+Bug-Debian: http://bugs.debian.org/659299
+Forwarded: no
+Last-Update: 2014-05-18
+
+Index: keyutils-1.5.9/tests/prepare.inc.sh
+===================================================================
+--- keyutils-1.5.9.orig/tests/prepare.inc.sh
++++ keyutils-1.5.9/tests/prepare.inc.sh
 @@ -1,10 +1,12 @@
  # preparation script for running keyring tests
  

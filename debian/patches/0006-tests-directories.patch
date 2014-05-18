@@ -1,10 +1,15 @@
-Author: Daniel Baumann <mail@daniel-baumann.ch>
-Description:
- Use change-directory instead of push- and pop-directory (Closes: #659297).
+From: Daniel Baumann <mail@daniel-baumann.ch>
+Date: Fri, 29 Jun 2012 21:01:32 +0200
+Subject: Use change-directory instead of push- and pop-directory
 
-diff -Naurp keyutils.orig/tests/runtest.sh keyutils/tests/runtest.sh
---- keyutils.orig/tests/runtest.sh
-+++ keyutils/tests/runtest.sh
+ Bug-Debian: http://bugs.debian.org/659297
+ Forwarded: no
+ Last-Update: 2014-05-18
+
+Index: keyutils-1.5.9/tests/runtest.sh
+===================================================================
+--- keyutils-1.5.9.orig/tests/runtest.sh
++++ keyutils-1.5.9/tests/runtest.sh
 @@ -12,9 +12,9 @@ fi
  
  for i in ${TESTS}; do
