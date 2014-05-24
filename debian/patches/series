@@ -2,5 +2,4 @@
 0004-cflags.patch
 0005-hardening.patch
 0006-tests-directories.patch
-0007-tests-keyctl.patch
 0008-man-page-syntax-fixes.patch
