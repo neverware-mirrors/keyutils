@@ -5,3 +5,4 @@
 0008-man-page-syntax-fixes.patch
 0009-Use-bash-to-execute-the-tests.patch
 0010-enable-skipping-tests-req-root.patch
+0011-Disable-some-tests.patch
