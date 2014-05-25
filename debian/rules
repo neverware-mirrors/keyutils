@@ -18,8 +18,8 @@ override_dh_auto_install:
 	dh_auto_install -- LIBDIR=/lib/$(DEB_HOST_MULTIARCH) USRLIBDIR=/usr/lib/$(DEB_HOST_MULTIARCH)
 
 override_dh_auto_test:
-	# some tests do not yet work properly
-	-dh_auto_test
+	# Use  the library and executable we just built
+	dh_auto_test -- PATH=$(CURDIR):$(PATH) LD_LIBRARY_PATH=$(CURDIR)
 
 override_dh_install:
 	dh_install --fail-missing
