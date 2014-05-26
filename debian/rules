@@ -20,7 +20,7 @@ override_dh_auto_install:
 override_dh_auto_test:
 	# Use  the library and executable we just built;
 	# skip tests requiring root
-	dh_auto_test -- PATH=$(CURDIR):$(PATH) LD_LIBRARY_PATH=$(CURDIR) SKIPROOT=yes
+	dh_auto_test -- PATH=$(CURDIR):$(PATH) LD_LIBRARY_PATH=$(CURDIR) SKIPROOT=yes SKIPINSTALLED=yes
 
 override_dh_install:
 	dh_install --fail-missing
