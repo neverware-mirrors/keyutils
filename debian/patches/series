@@ -8,3 +8,4 @@
 0011-Disable-some-tests.patch
 0012-Remove-RHEL-specific-feature-test.patch
 0013-Enable-skipping-test-requiring-installation.patch
+0014-Conditionalize-tests-based-on-kernel-version.patch
