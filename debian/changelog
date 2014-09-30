@@ -1,3 +1,13 @@
+keyutils (1.5.5-3+deb7u1) wheezy; urgency=medium
+
+  * debian/rules:
+    - Use the default compression level for xz instead of the maximum level 9
+      when building the binary packages. Closes: #757740
+  * debian/control:
+    - Set Maintainer to myself
+
+ -- Christian Kastner <debian@kvr.at>  Mon, 29 Sep 2014 15:50:48 +0200
+
 keyutils (1.5.5-3) unstable; urgency=low
 
   * Switching to xz compression.
