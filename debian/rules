@@ -19,4 +19,4 @@ override_dh_strip:
 	dh_strip --dbg-package=keyutils-dbg
 
 override_dh_builddeb:
-	dh_builddeb -- -Zxz -z9
+	dh_builddeb -- -Zxz
