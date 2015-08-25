@@ -1,3 +1,15 @@
+keyutils (1.5.9-5) unstable; urgency=low
+
+  * debian/rules:
+    - Also exclude arm64 from maxdesclen test, fixing a FTBFS. Closes: #754206
+  * debian/patches (refreshed):
+    - 0009-Use-bash-to-execute-the-tests.patch
+      0010-enable-skipping-tests-req-root.patch
+      0016-Enable-skipping-of-MAXDESCLEN-tests.patch
+      Refreshed DEP3 headers
+
+ -- Christian Kastner <debian@kvr.at>  Sat, 26 Jul 2014 23:39:12 +0200
+
 keyutils (1.5.9-4) unstable; urgency=low
 
   * debian/rules:
