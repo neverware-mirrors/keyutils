@@ -4,7 +4,6 @@ Priority: optional
 Maintainer: Christian Kastner <ckk@debian.org>
 Build-Depends: debhelper (>= 9), lsb-release
 Standards-Version: 3.9.6
-XS-Testsuite: autopkgtest
 Homepage: http://people.redhat.com/~dhowells/keyutils/
 Vcs-Git: git://anonscm.debian.org/collab-maint/keyutils.git
 Vcs-Browser: http://anonscm.debian.org/gitweb/?p=collab-maint/keyutils.git
