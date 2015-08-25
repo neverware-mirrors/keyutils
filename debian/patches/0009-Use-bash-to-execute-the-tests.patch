@@ -5,6 +5,8 @@ Subject: Use bash to execute the tests
 The test fixtures are full of bashisms. Getting rid of them should be discussed
 with upstream first.
 
+Forwarded: not-needed
+Last-Update: 2014-07-26
 ---
  tests/prepare.inc.sh | 2 +-
  tests/runtest.sh     | 2 +-

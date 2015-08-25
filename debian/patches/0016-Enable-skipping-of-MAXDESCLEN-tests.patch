@@ -7,7 +7,8 @@ the result is actually successful (verified manually), they should be skipped
 on those platforms.
 
 Bug-Debian: http://bugs.debian.org/749657
-Last-Update: 2014-06-05
+Forwarded: yes
+Last-Update: 2014-07-26
 ---
  tests/keyctl/add/bad-args/runtest.sh        | 13 ++++++++-----
  tests/keyctl/newring/bad-args/runtest.sh    | 12 ++++++++----
