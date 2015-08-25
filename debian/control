@@ -1,7 +1,7 @@
 Source: keyutils
 Section: admin
 Priority: optional
-Maintainer: Christian Kastner <debian@kvr.at>
+Maintainer: Christian Kastner <ckk@debian.org>
 Build-Depends: debhelper (>= 9), lsb-release
 Standards-Version: 3.9.5
 XS-Testsuite: autopkgtest
