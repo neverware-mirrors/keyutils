@@ -3,7 +3,7 @@ Upstream-Name: keyutils
 Upstream-Contact: David Howells <dhowells@redhat.com>
 Source: http://people.redhat.com/~dhowells/keyutils/
 
-Files: keyctl* request-key*
+Files: *
 Copyright: 2005-2014, Red Hat <http://www.redhat.com/>
 License: GPL-2+
 
