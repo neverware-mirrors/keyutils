@@ -10,3 +10,4 @@ Remove-RHEL-specific-feature-test.patch
 Enable-skipping-test-requiring-installation.patch
 Conditionalize-tests-based-on-kernel-version.patch
 Insert-delay-in-key-invalidation-test.patch
+Make-testcase-aware-of-a-kernel-behaviour-change.patch
