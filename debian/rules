@@ -7,8 +7,6 @@ DEB_BUILD_GNU_TYPE ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
 DEB_HOST_GNU_TYPE ?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
 DEB_HOST_MULTIARCH ?= $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
 
-# Skip MAXDESCLEN tests on these architectures:
-SKIPMAXDESCLEN = mip mipsel sparc arm64
 
 %:
 	dh ${@}
@@ -23,22 +21,12 @@ override_dh_auto_install:
 
 override_dh_auto_test:
 	# Use  the library and executable we just built;
-	# skip tests requiring root;
-	# disable maxdesclen tests on mips, mipsel, and sparc
-ifeq (,$(findstring $(DEB_BUILD_ARCH),$(SKIPMAXDESCLEN)))
+	# skip tests requiring root
 	dh_auto_test -- \
 		PATH=$(CURDIR):$(PATH) \
 		LD_LIBRARY_PATH=$(CURDIR) \
 		SKIPROOT=yes \
 		SKIPINSTALLED=yes
-else
-	dh_auto_test -- \
-		PATH=$(CURDIR):$(PATH) \
-		LD_LIBRARY_PATH=$(CURDIR) \
-		SKIPROOT=yes \
-		SKIPINSTALLED=yes \
-		MAXDESCLEN_NOCHECK=yes
-endif
 
 override_dh_install:
 	dh_install --fail-missing
