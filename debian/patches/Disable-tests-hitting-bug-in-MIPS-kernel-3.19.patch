@@ -19,8 +19,9 @@ Last-Update: 2015-09-01
  tests/keyctl/newring/bad-args/runtest.sh    | 15 +++++++++++----
  tests/keyctl/padd/bad-args/runtest.sh       | 15 +++++++++++----
  tests/keyctl/requesting/bad-args/runtest.sh | 15 +++++++++++----
+ tests/keyctl/search/bad-args/runtest.sh     | 21 ++++++++++++++-------
  tests/keyctl/session/bad-args/runtest.sh    | 15 +++++++++++----
- 5 files changed, 55 insertions(+), 20 deletions(-)
+ 6 files changed, 69 insertions(+), 27 deletions(-)
 
 diff --git a/tests/keyctl/add/bad-args/runtest.sh b/tests/keyctl/add/bad-args/runtest.sh
 index 8419fbc..bd14d1f 100644
@@ -50,7 +51,7 @@ index 8419fbc..bd14d1f 100644
  # check that a bad key ID fails correctly
  marker "CHECK BAD KEY ID"
 diff --git a/tests/keyctl/newring/bad-args/runtest.sh b/tests/keyctl/newring/bad-args/runtest.sh
-index 54655c3..de9aafd 100644
+index 54655c3..036359a 100644
 --- a/tests/keyctl/newring/bad-args/runtest.sh
 +++ b/tests/keyctl/newring/bad-args/runtest.sh
 @@ -21,10 +21,17 @@ else
@@ -76,7 +77,7 @@ index 54655c3..de9aafd 100644
  # check that an empty keyring name fails
  marker "CHECK EMPTY KEYRING NAME"
 diff --git a/tests/keyctl/padd/bad-args/runtest.sh b/tests/keyctl/padd/bad-args/runtest.sh
-index a13e8db..ed93959 100644
+index a13e8db..11b1ceb 100644
 --- a/tests/keyctl/padd/bad-args/runtest.sh
 +++ b/tests/keyctl/padd/bad-args/runtest.sh
 @@ -51,10 +51,17 @@ else
@@ -102,7 +103,7 @@ index a13e8db..ed93959 100644
  # check that a bad key ID fails correctly
  marker "CHECK BAD KEY ID"
 diff --git a/tests/keyctl/requesting/bad-args/runtest.sh b/tests/keyctl/requesting/bad-args/runtest.sh
-index f460a9b..9934a95 100644
+index f460a9b..b7f1a85 100644
 --- a/tests/keyctl/requesting/bad-args/runtest.sh
 +++ b/tests/keyctl/requesting/bad-args/runtest.sh
 @@ -91,10 +91,17 @@ marker "CHECK MAXLEN DESC"
@@ -127,8 +128,40 @@ index f460a9b..9934a95 100644
  
  # check that a max length callout info works correctly
  marker "CHECK MAXLEN CALLOUT"
+diff --git a/tests/keyctl/search/bad-args/runtest.sh b/tests/keyctl/search/bad-args/runtest.sh
+index 23bbc8b..cd4718e 100644
+--- a/tests/keyctl/search/bad-args/runtest.sh
++++ b/tests/keyctl/search/bad-args/runtest.sh
+@@ -45,13 +45,20 @@ expect_error ENOKEY
+ search_for_key --fail @s user $maxdesc @p
+ expect_error ENOKEY
+ 
+-# check that an overlong key description fails correctly (>4095 inc NUL)
+-marker "CHECK OVERLONG DESC"
+-search_for_key --fail @s user a$maxdesc
+-expect_error EINVAL
+-
+-search_for_key --fail @s user a$maxdesc @p
+-expect_error EINVAL
++# This doesn't work on MIPS earler than 3.19 because of a kernel bug
++kver=`uname -r`
++kmch=`uname -m`
++if ! version_less_than "$kver" 3.19 ||
++	[ "$kmch" != "mips" -a "$kmch" != "mips64" ]
++then
++	# check that an overlong key description fails correctly (>4095 inc NUL)
++	marker "CHECK OVERLONG DESC"
++	search_for_key --fail @s user a$maxdesc
++	expect_error EINVAL
++
++	search_for_key --fail @s user a$maxdesc @p
++	expect_error EINVAL
++fi
+ 
+ # check that a bad key ID fails correctly
+ marker "CHECK BAD KEY ID"
 diff --git a/tests/keyctl/session/bad-args/runtest.sh b/tests/keyctl/session/bad-args/runtest.sh
-index e3b6f71..af69797 100644
+index e3b6f71..9cd5b6b 100644
 --- a/tests/keyctl/session/bad-args/runtest.sh
 +++ b/tests/keyctl/session/bad-args/runtest.sh
 @@ -14,10 +14,17 @@ marker "SESSION WITH EMPTY KEYRING NAME"
