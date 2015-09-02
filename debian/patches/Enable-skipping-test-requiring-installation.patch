@@ -8,7 +8,6 @@ which means we cannot test subcommands at build time.
 
 Applied-Upstream: https://git.kernel.org/cgit/linux/kernel/git/dhowells/keyutils.git/commit/?id=64f608523965f7ebd5e172ad8d5f4af56ed151ee
 Last-Update: 2015-08-25
-
 ---
  tests/keyctl/requesting/bad-args/runtest.sh |  9 +++++++++
  tests/keyctl/requesting/noargs/runtest.sh   |  9 +++++++++
@@ -114,6 +113,3 @@ index 6860e30..f5db313 100644
 +else
 +    skip_install_required=0
 +fi
--- 
-2.0.0.rc4
-
