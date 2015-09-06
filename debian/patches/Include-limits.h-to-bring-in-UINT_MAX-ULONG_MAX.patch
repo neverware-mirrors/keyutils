@@ -1,0 +1,25 @@
+From: Helmut Grohne <helmutg@debian.org>
+Date: Sun, 6 Sep 2015 15:46:00 +0200
+Subject: Include limits.h to bring in UINT_MAX, ULONG_MAX
+
+These macros are already being used. This happens to be non-fatal when
+building with glibc, but causes a build failure with musl libc.
+
+Bug-Debian: https://bugs.debian.org/798157
+Last-Update: 2015-09-06
+---
+ key.dns_resolver.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/key.dns_resolver.c b/key.dns_resolver.c
+index c2a9fe5..d41e219 100644
+--- a/key.dns_resolver.c
++++ b/key.dns_resolver.c
+@@ -56,6 +56,7 @@
+ #include <stdlib.h>
+ #include <unistd.h>
+ #include <time.h>
++#include <limits.h>
+ 
+ static const char *DNS_PARSE_VERSION = "1.0";
+ static const char prog[] = "key.dns_resolver";
