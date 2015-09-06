@@ -12,4 +12,3 @@ Conditionalize-tests-based-on-kernel-version.patch
 Insert-delay-in-key-invalidation-test.patch
 Make-testcase-aware-of-a-kernel-behaviour-change.patch
 Disable-tests-hitting-bug-in-MIPS-kernel-3.19.patch
-Include-limits.h-to-bring-in-UINT_MAX-ULONG_MAX.patch
