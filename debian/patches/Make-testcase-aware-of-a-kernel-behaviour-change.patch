@@ -13,7 +13,9 @@ The kernel changed referred to also affected timeout/valid, which had
 previously been affected by another change. All in all, between 3.8 and 3.12,
 kernel returned ENOKEY instead of EKEYEXPIRED.
 
-Last-Update: 2015-09-01
+Bug-Debian: https://bugs.debian.org/768905
+Applied-Upstream: https://git.kernel.org/cgit/linux/kernel/git/dhowells/keyutils.git/commit/?id=7a75d5690503ffb9eadf7f01fcc1a44e88994e33
+Last-Update: 2015-09-30
 ---
  tests/keyctl/timeout/valid/runtest.sh | 16 ++++++++++++++--
  1 file changed, 14 insertions(+), 2 deletions(-)

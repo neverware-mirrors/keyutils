@@ -13,7 +13,9 @@ commit in 3.19:
 
 This patch disables the problematic tests on MIPS kernels older than 3.19.
 
-Last-Update: 2015-09-01
+Bug-Debian: https://bugs.debian.org/779351
+Applied-Upstream: https://git.kernel.org/cgit/linux/kernel/git/dhowells/keyutils.git/commit/?id=7a75d5690503ffb9eadf7f01fcc1a44e88994e33
+Last-Update: 2015-09-30
 ---
  tests/keyctl/add/bad-args/runtest.sh        | 15 +++++++++++----
  tests/keyctl/newring/bad-args/runtest.sh    | 15 +++++++++++----
