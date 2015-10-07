@@ -1,5 +1,7 @@
 #!/usr/bin/make -f
 
+CHANGEDATE = $(shell date -d "`dpkg-parsechangelog -SDate`" +%F)
+
 export DEB_BUILD_MAINT_OPTIONS = hardening=+all
 
 DEB_BUILD_ARCH ?= $(shell dpkg-architecture -qDEB_BUILD_ARCH)
@@ -11,9 +13,11 @@ DEB_HOST_MULTIARCH ?= $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
 %:
 	dh ${@}
 
-ifneq ($(DEB_BUILD_GNU_TYPE),$(DEB_HOST_GNU_TYPE))
 override_dh_auto_build:
-	dh_auto_build -- CC=$(DEB_HOST_GNU_TYPE)-gcc AR=$(DEB_HOST_GNU_TYPE)-ar
+ifneq ($(DEB_BUILD_GNU_TYPE),$(DEB_HOST_GNU_TYPE))
+	dh_auto_build -- BUILDDATE=$(CHANGEDATE) CC=$(DEB_HOST_GNU_TYPE)-gcc AR=$(DEB_HOST_GNU_TYPE)-ar
+else
+	dh_auto_build -- BUILDDATE=$(CHANGEDATE)
 endif
 
 override_dh_auto_install:
