@@ -1,6 +1,7 @@
 #!/usr/bin/make -f
 
-CHANGEDATE = $(shell date -d "`dpkg-parsechangelog -SDate`" +%F)
+# $SOURCE_DATE_EPOCH is exported by debhelper
+CHANGEDATE = $(shell date -d @$(SOURCE_DATE_EPOCH) +%F)
 
 export DEB_BUILD_MAINT_OPTIONS = hardening=+all
 
