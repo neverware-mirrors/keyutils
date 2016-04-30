@@ -14,3 +14,4 @@ Make-testcase-aware-of-a-kernel-behaviour-change.patch
 Disable-tests-hitting-bug-in-MIPS-kernel-3.19.patch
 Include-limits.h-for-UINT_MAX.patch
 Make-build-reproducible.patch
+Drop-tests-requiring-CONFIG_BIG_KEYS.patch
