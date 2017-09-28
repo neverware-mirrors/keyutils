@@ -1,10 +1,11 @@
-keyutils (1.5.9-9.1) UNRELEASED; urgency=medium
+keyutils (1.5.9-9.1) unstable; urgency=medium
 
+  * Non-maintainer upload.
   * d/rules:
     - Read SOURCE_DATE_EPOCH in UTC, thanks to Reiner Herrmann for the patch.
       (Closes: #828681)
 
- -- Holger Levsen <holger@debian.org>  Thu, 28 Sep 2017 14:14:53 +0200
+ -- Holger Levsen <holger@debian.org>  Thu, 28 Sep 2017 14:19:16 +0200
 
 keyutils (1.5.9-9) unstable; urgency=medium
 
