@@ -1,3 +1,11 @@
+keyutils (1.5.9-9.1) UNRELEASED; urgency=medium
+
+  * d/rules:
+    - Read SOURCE_DATE_EPOCH in UTC, thanks to Reiner Herrmann for the patch.
+      (Closes: #828681)
+
+ -- Holger Levsen <holger@debian.org>  Thu, 28 Sep 2017 14:14:53 +0200
+
 keyutils (1.5.9-9) unstable; urgency=medium
 
   * Drop package keyutils-dbg in favor of automatic dbgsym packages, as per
