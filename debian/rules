@@ -8,6 +8,7 @@ export DEB_BUILD_MAINT_OPTIONS = hardening=+all
 DEB_VERSION := $(shell dpkg-parsechangelog -S Version)
 DEB_BUILD_ARCH ?= $(shell dpkg-architecture -qDEB_BUILD_ARCH)
 DEB_BUILD_GNU_TYPE ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
+DEB_HOST_ARCH ?= $(shell dpkg-architecture -qDEB_HOST_ARCH)
 DEB_HOST_GNU_TYPE ?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
 DEB_HOST_MULTIARCH ?= $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
 
@@ -26,6 +27,7 @@ override_dh_auto_install:
 	dh_auto_install -- LIBDIR=/lib/$(DEB_HOST_MULTIARCH) USRLIBDIR=/usr/lib/$(DEB_HOST_MULTIARCH)
 
 override_dh_auto_test:
+ifeq ($(filter $(DEB_HOST_ARCH), mips mipsel),)
 	# Use  the library and executable we just built;
 	# skip tests requiring root
 	dh_auto_test -- \
@@ -33,6 +35,14 @@ override_dh_auto_test:
 		LD_LIBRARY_PATH=$(CURDIR) \
 		SKIPROOT=yes \
 		SKIPINSTALLED=yes
+else
+	# Disable the testsuite on mips and mipsel where the kernel might not
+	#  have the nessesary compat keyctl syscall available.
+	# This can be removed when either:
+	# - All the buildds use kernel >= 4.12
+	# - #881830 is fixed in stable
+	echo Testsuite disabled on $(DEB_HOST_ARCH)
+endif
 
 override_dh_install:
 	dh_install --fail-missing

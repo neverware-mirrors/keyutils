@@ -1,3 +1,12 @@
+keyutils (1.5.9-9.2) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * debian/rules:
+    - Disable testsuite on mips and mipsel until kernel bug #881830 is fixed.
+      (Closes: #881912)
+
+ -- James Cowgill <jcowgill@debian.org>  Thu, 16 Nov 2017 12:19:11 +0000
+
 keyutils (1.5.9-9.1) unstable; urgency=medium
 
   * Non-maintainer upload.
