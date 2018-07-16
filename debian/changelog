@@ -1,9 +1,11 @@
-keyutils (1.5.9-9.3) UNRELEASED; urgency=medium
+keyutils (1.5.9-9.3) unstable; urgency=medium
 
   * Non-maintainer upload.
-  *
+  * d/control: Migrate Vcs repository to salsa.d.o.
+  * d/patches: Add endianness-and-PIE.patch to fix FTBFS.
+    Thanks to Steve Langasek and Adam Conrad (Closes: #895463)
 
- -- James Cowgill <jcowgill@debian.org>  Mon, 16 Jul 2018 09:46:48 +0100
+ -- James Cowgill <jcowgill@debian.org>  Mon, 16 Jul 2018 09:53:06 +0100
 
 keyutils (1.5.9-9.2) unstable; urgency=medium
 
