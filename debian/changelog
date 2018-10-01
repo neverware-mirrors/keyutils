@@ -1,6 +1,7 @@
 keyutils (1.5.9-10) UNRELEASED; urgency=medium
 
   * d/tests: Use AUTOPKGTEST_TMP instead of ADTTMP
+  * d/copyright: Use https protocol in Format field
 
  -- Ondřej Nový <onovy@debian.org>  Mon, 01 Oct 2018 09:39:00 +0200
 

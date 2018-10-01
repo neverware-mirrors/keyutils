@@ -1,4 +1,4 @@
-Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: keyutils
 Upstream-Contact: David Howells <dhowells@redhat.com>
 Source: http://people.redhat.com/~dhowells/keyutils/
