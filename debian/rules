@@ -5,7 +5,6 @@ CHANGEDATE = $(shell date -u -d @$(SOURCE_DATE_EPOCH) +%F)
 
 export DEB_BUILD_MAINT_OPTIONS = hardening=+all
 
-DEB_VERSION := $(shell dpkg-parsechangelog -S Version)
 DEB_BUILD_ARCH ?= $(shell dpkg-architecture -qDEB_BUILD_ARCH)
 DEB_BUILD_GNU_TYPE ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
 DEB_HOST_ARCH ?= $(shell dpkg-architecture -qDEB_HOST_ARCH)
