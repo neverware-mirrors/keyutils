@@ -1,9 +1,36 @@
-keyutils (1.5.9-10) UNRELEASED; urgency=medium
+keyutils (1.5.9-10) unstable; urgency=medium
 
-  * d/tests: Use AUTOPKGTEST_TMP instead of ADTTMP
-  * d/copyright: Use https protocol in Format field
+  * Acknowledge NMUs. Thanks, Holger Levsen and James Cowgill!
 
- -- Ondřej Nový <onovy@debian.org>  Mon, 01 Oct 2018 09:39:00 +0200
+  [ Ondřej Nový ]
+  * d/tests:
+    - Use AUTOPKGTEST_TMP instead of ADTTMP
+  * d/copyright:
+    - Use https protocol in Format field
+
+  [ Christian Kastner ]
+  * d/watch:
+    - Update to formation version 4
+    - Switch URI to https
+  * d/rules:
+    - Switch from dh_install to dh_missing
+    - Drop override_dh_strip
+      It was only needed for the dbgsym migration
+    - Remove unused DEB_VERSION
+  * d/control:
+    - Bump Standards-Version to 4.3.0 (no changes needed)
+    - Switch Build-Depends from debhelper to debhelper-compat
+    - Bump Build-Depends for debhelper-compat to 12
+    - Switch to https protocol in Homepage field
+    - Remove Priority from library libkeyutils1
+      Default to the package Priority of "optional". lintian is correct in that
+      a library gets pulled in not per se, but as a dependency
+  * d/compat:
+    - Drop, as made obsolete by debhelper-compat
+  * d/copyright:
+    - Bump copyrights
+
+ -- Christian Kastner <ckk@debian.org>  Wed, 06 Feb 2019 23:12:27 +0100
 
 keyutils (1.5.9-9.3) unstable; urgency=medium
 
