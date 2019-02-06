@@ -3,7 +3,7 @@ Section: admin
 Priority: optional
 Maintainer: Christian Kastner <ckk@debian.org>
 Build-Depends:
-    debhelper-compat (= 9),
+    debhelper-compat (= 12),
     lsb-release,
 Standards-Version: 3.9.8
 Homepage: http://people.redhat.com/~dhowells/keyutils/
