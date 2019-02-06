@@ -24,7 +24,6 @@ Description: Linux Key Management Utilities
 
 Package: libkeyutils1
 Section: libs
-Priority: standard
 Architecture: linux-any
 Multi-Arch: same
 Depends:
