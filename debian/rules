@@ -46,6 +46,3 @@ endif
 
 override_dh_missing:
 	dh_missing --fail-missing
-
-override_dh_strip:
-	dh_strip --dbgsym-migration='keyutils-dbg (<< $(DEB_VERSION)~)'
