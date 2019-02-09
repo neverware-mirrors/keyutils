@@ -1,7 +1,6 @@
 cifs.patch
 cflags.patch
 hardening.patch
-tests-directories.patch
 man-page-syntax-fixes.patch
 Use-bash-to-execute-the-tests.patch
 enable-skipping-tests-req-root.patch
