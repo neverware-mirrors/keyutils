@@ -1,38 +1,29 @@
-From: Christian Kastner <ckk@kvr.at>
+From: Christian Kastner <ckk@debian.org>
 Date: Sat, 30 Apr 2016 23:49:52 +0200
 Subject: Drop tests requiring CONFIG_BIG_KEYS
 
 The Debian kernel is not built with CONFIG_BIG_KEYS.
 
 Forwarded: not-needed
-Last-Update: 2016-04-30
+Last-Update: 2019-02-09
 ---
  tests/keyctl/padd/useradd/runtest.sh | 15 ---------------
  1 file changed, 15 deletions(-)
 
-diff --git a/tests/keyctl/padd/useradd/runtest.sh b/tests/keyctl/padd/useradd/runtest.sh
-index 4c675f5..d5e4db9 100644
---- a/tests/keyctl/padd/useradd/runtest.sh
-+++ b/tests/keyctl/padd/useradd/runtest.sh
-@@ -56,21 +56,6 @@ then
- 	expect_keyid keyid
- 	md5sum_key $keyid
- 	expect_payload payload "f128f774ede3fe931e7c6745c4292f40"
--
--	if ! version_less_than `uname -r` 3.13
--	then
--		marker "ADD SMALL BIG KEY"
--		pcreate_key_by_size 128 big_key small @s
--		expect_keyid keyid
--		md5sum_key $keyid
--		expect_payload payload "f09f35a5637839458e462e6350ecbce4"
--
--		marker "ADD HUGE BIG KEY"
--		pcreate_key_by_size $((1024*1024-1)) big_key huge @s
--		expect_keyid keyid
--		md5sum_key $keyid
--		expect_payload payload "e57598cd670284cf7d09e16ed9d4b2ac"
--	fi
- fi
+Index: keyutils/tests/prepare.inc.sh
+===================================================================
+--- keyutils.orig/tests/prepare.inc.sh
++++ keyutils/tests/prepare.inc.sh
+@@ -82,11 +82,8 @@ fi
+ #
+ # Work out whether the big_key type is supported by the kernel
+ #
++# Debian's kernel is not built with CONFIG_BIG_KEYS
+ have_big_key_type=0
+-if kernel_at_or_later_than 3.13-rc1
+-then
+-    have_big_key_type=1
+-fi
  
- marker "CLEAR KEYRING"
+ #
+ # Work out whether Diffie-Hellman is supported by the kernel

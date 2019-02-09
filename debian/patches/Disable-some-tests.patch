@@ -1,4 +1,4 @@
-From: Christian Kastner <debian@kvr.at>
+From: Christian Kastner <ckk@debian.org>
 Date: Mon, 26 May 2014 00:44:59 +0200
 Subject: Disable some tests
 
@@ -6,7 +6,7 @@ Some tests do not properly check whether features they need are available.
 These will be fixed in the next upstream release.
 
 Forwarded: no
-Last-Update: 2014-05-29
+Last-Update: 2019-02-09
 ---
  tests/bugzillas/bz1031154/runtest.sh | 87 ------------------------------------
  1 file changed, 87 deletions(-)
@@ -17,18 +17,35 @@ deleted file mode 100644
 index e4d64d4..0000000
 --- a/tests/bugzillas/bz1031154/runtest.sh
 +++ /dev/null
-@@ -1,87 +0,0 @@
--#!/bin/sh
+@@ -1,104 +0,0 @@
+-#!/bin/bash
 -
 -# Test for https://bugzilla.redhat.com/show_bug.cgi?id=1031154
 -
 -. ../../prepare.inc.sh
 -. ../../toolbox.inc.sh
 -
+-# We intentionally generate AVCs so the test system shouldn't fail us
+-# because the AVCs were generated.
+-export AVC_ERROR=+no_avc_check
+-export RHTS_OPTION_STRONGER_AVC=
 -
 -# ---- do the actual testing ----
 -
 -result=PASS
+-
+-if [ $have_big_key_type = 0 ]
+-then
+-    toolbox_skip_test $TEST "SKIPPING TEST DUE TO LACK OF BIG_KEY TYPE"
+-    exit 0
+-fi
+-
+-require_selinux
+-require_command getenforce
+-require_command setenforce
+-require_command runcon
+-require_command ausearch
+-
 -echo "++++ BEGINNING TEST" >$OUTPUTFILE
 -
 -# we need a reference time to scan the audit log from so as not to pick up old
