@@ -1,3 +1,42 @@
+keyutils (1.6-1) unstable; urgency=medium
+
+  * New upstream version 1.6
+  * Update git repository layout to follow DEP-14
+
+  * d/patches (dropped):
+    - Drop tests-directories.patch.
+      It's purpose was to get rid of bashisms, but in the meantime, bash has
+      become a requirement
+  * d/patches (dropped, included or fixed upstream):
+     - man-page-syntax-fixes.patch
+     - enable-skipping-tests-req-root.patch
+     - Enable-skipping-test-requiring-installation.patch
+     - Make-testcase-aware-of-a-kernel-behaviour-change.patch
+     - Disable-tests-hitting-bug-in-MIPS-kernel-3.19.patch
+     - Use-bash-to-execute-the-tests.patch
+     - Conditionalize-tests-based-on-kernel-version.patch
+     - Insert-delay-in-key-invalidation-test.patch
+     - Include-limits.h-for-UINT_MAX.patch
+     - Adjust-tests-for-3.18-kernel-change.patch
+  * d/patches (added):
+     - pkg-config-install-tweaks.patch
+     - man-page-fixes.patch
+  * d/patches:
+    - Refresh remaining patches against 1.6
+  * d/libkeyutils1.symbols:
+    - Add symbols from new upstream version
+    - Add field Build-Depends-Package
+  * d/rules:
+    - Re-sync build option names with upstream
+  * d/tests:
+    -  Add restriction isolation-machine to upstream-runtime-tests
+  * gbp.conf:
+    - Update to reflect new DEP-14 layout
+  * d/copyright:
+    - Bump copyright years
+
+ -- Christian Kastner <ckk@debian.org>  Sun, 10 Feb 2019 15:29:04 +0100
+
 keyutils (1.5.9-10) unstable; urgency=medium
 
   * Acknowledge NMUs. Thanks, Holger Levsen and James Cowgill!
