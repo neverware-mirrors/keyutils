@@ -6,3 +6,4 @@ Remove-RHEL-specific-feature-test.patch
 Make-build-reproducible.patch
 Drop-tests-requiring-CONFIG_BIG_KEYS.patch
 endianness-and-PIE.patch
+pkg-config-install-tweaks.patch
