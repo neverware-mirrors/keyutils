@@ -32,8 +32,8 @@ ifeq ($(filter $(DEB_HOST_ARCH), mips mipsel),)
 	dh_auto_test -- \
 		PATH=$(CURDIR):$(PATH) \
 		LD_LIBRARY_PATH=$(CURDIR) \
-		SKIPROOT=yes \
-		SKIPINSTALLED=yes
+		SKIPROOTREQ=yes \
+		SKIPINSTALLREQ=yes
 else
 	# Disable the testsuite on mips and mipsel where the kernel might not
 	#  have the nessesary compat keyctl syscall available.
