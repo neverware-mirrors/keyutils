@@ -1,3 +1,12 @@
+keyutils (1.6-2) unstable; urgency=medium
+
+  * Add patchd/Disable-DH-tests.patch
+    Apparently, this requires a kernel feature not available on all buildds, and
+    the upstream feature tests only checks for kernel version and not actually
+    enabled kernel options.
+
+ -- Christian Kastner <ckk@debian.org>  Tue, 12 Feb 2019 07:36:31 +0100
+
 keyutils (1.6-1) unstable; urgency=medium
 
   * New upstream version 1.6
