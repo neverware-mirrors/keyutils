@@ -1,0 +1,26 @@
+From: Christian Kastner <ckk@debian.org>
+Date: Tue, 12 Feb 2019 07:31:36 +0100
+Subject: Disable DH tests
+
+Apparently, this requires a kernel feature not available on all buildds, and
+the upstream feature tests only checks for kernel version and not actually
+enabled kernel options.
+---
+ tests/prepare.inc.sh | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/tests/prepare.inc.sh b/tests/prepare.inc.sh
+index 12ac73e..4c7ba91 100644
+--- a/tests/prepare.inc.sh
++++ b/tests/prepare.inc.sh
+@@ -91,7 +91,9 @@ have_big_key_type=0
+ have_dh_compute=0
+ if keyutils_at_or_later_than 1.5.10 && kernel_at_or_later_than 4.7-rc1
+ then
+-    have_dh_compute=1
++    # Deactive, as this is apparently not enabled on all buildds
++    #have_dh_compute=1
++    have_dh_compute=0
+ fi
+ 
+ #
