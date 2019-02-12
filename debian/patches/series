@@ -1,10 +1,8 @@
 cifs.patch
 cflags.patch
 hardening.patch
-Remove-RHEL-specific-feature-test.patch
+Debian-specific-kernel-feature-tests.patch
 Make-build-reproducible.patch
-Drop-tests-requiring-CONFIG_BIG_KEYS.patch
 endianness-and-PIE.patch
 pkg-config-install-tweaks.patch
 man-page-fixes.patch
-Disable-DH-tests.patch
