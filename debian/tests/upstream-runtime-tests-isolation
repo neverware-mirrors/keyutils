@@ -7,5 +7,4 @@ set -e
 # directory because it generates output within each test's source directory.
 cp -r tests "$AUTOPKGTEST_TMP"
 cd "$AUTOPKGTEST_TMP"/tests
-# Skip tests requiring /sbin/request-key
-make SKIPINSTALLREQ=1 run
+make run
