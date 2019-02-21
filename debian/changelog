@@ -1,3 +1,21 @@
+keyutils (1.6-3) unstable; urgency=medium
+
+  * d/patches:
+    - Add Debian-specific-kernel-feature-tests.patch
+      Fold various Debian kernel feature test patches into one, dropping all
+      the other patches
+    - Drop Disable-some-tests.patch
+      The test is guarded by a kernel feature test for CONFIG_BIG_KEYS, which
+      we disable in another patch anyway
+  * d/tests: Split tests in two: isolation-machine required, or not
+  * d/control: Add Rules-Requires-Root: no
+    We don't need (fake)root to build the packages
+  * d/rules: Re-enable tests on MIPS
+    Bug #881830 blocking this has been fixed in stable in 2017, and the fix should
+    have propagated to the buildds by now
+
+ -- Christian Kastner <ckk@debian.org>  Thu, 21 Feb 2019 20:49:14 +0100
+
 keyutils (1.6-2) unstable; urgency=medium
 
   * Add patchd/Disable-DH-tests.patch
