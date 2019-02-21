@@ -4,10 +4,14 @@ Subject: Debian-specific kernel feature tests
 
 Upstream assumes features based on the kernel version, but some of these
 features aren't available in the Debian kernel, or were only enabled at a later
-point. Also, the release number comparison breaks with sid's release number of
-"unstable".
+point. Also, the release number comparison used by upstream breaks with sid's
+non-numeric release number of "unstable".
 
-Adjust the feature tests to reflect Debian's kernel config.
+This adjust the feature tests to reflect Debian's kernels:
+  * Drop $OSRELEASE tests
+  * Drop ancient RedHat-specific test
+  * Debian's kernel generally lacks CONFIG_BIG_KEYS
+  * Debian's kernel has CONFIG_KEY_DH_OPERATIONS since 4.19~exp1
 
 Forwarded: not-needed
 Last-Update: 2019-02-20
