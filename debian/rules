@@ -26,7 +26,6 @@ override_dh_auto_install:
 	dh_auto_install -- LIBDIR=/lib/$(DEB_HOST_MULTIARCH) USRLIBDIR=/usr/lib/$(DEB_HOST_MULTIARCH)
 
 override_dh_auto_test:
-ifeq ($(filter $(DEB_HOST_ARCH), mips mipsel),)
 	# Use  the library and executable we just built;
 	# skip tests requiring root
 	dh_auto_test -- \
@@ -34,14 +33,6 @@ ifeq ($(filter $(DEB_HOST_ARCH), mips mipsel),)
 		LD_LIBRARY_PATH=$(CURDIR) \
 		SKIPROOTREQ=yes \
 		SKIPINSTALLREQ=yes
-else
-	# Disable the testsuite on mips and mipsel where the kernel might not
-	#  have the nessesary compat keyctl syscall available.
-	# This can be removed when either:
-	# - All the buildds use kernel >= 4.12
-	# - #881830 is fixed in stable
-	echo Testsuite disabled on $(DEB_HOST_ARCH)
-endif
 
 override_dh_missing:
 	dh_missing --fail-missing
