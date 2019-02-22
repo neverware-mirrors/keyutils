@@ -1,3 +1,11 @@
+keyutils (1.6-4) unstable; urgency=medium
+
+  * d/tests: upstream-runtime-tests: Fix broken option value
+    SKIPINSTALLREQ expects "yes", not "1". This led to debci tests failing.
+  * d/changelog: Fix line too long in 1.6.0-3
+
+ -- Christian Kastner <ckk@debian.org>  Fri, 22 Feb 2019 16:49:41 +0100
+
 keyutils (1.6-3) unstable; urgency=medium
 
   * d/patches:
