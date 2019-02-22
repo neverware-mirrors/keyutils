@@ -11,8 +11,8 @@ keyutils (1.6-3) unstable; urgency=medium
   * d/control: Add Rules-Requires-Root: no
     We don't need (fake)root to build the packages
   * d/rules: Re-enable tests on MIPS
-    Bug #881830 blocking this has been fixed in stable in 2017, and the fix should
-    have propagated to the buildds by now
+    Bug #881830 blocking this has been fixed in stable in 2017, and the fix
+    should have propagated to the buildds by now
 
  -- Christian Kastner <ckk@debian.org>  Thu, 21 Feb 2019 20:49:14 +0100
 
