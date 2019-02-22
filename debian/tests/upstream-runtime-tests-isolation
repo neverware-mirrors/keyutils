@@ -5,9 +5,10 @@ set -e
 
 # We just copy and run the entire test suite to resp. from the $AUTOPKGTEST_TMP
 # directory because it generates output within each test's source directory.
-cp -r tests "$AUTOPKGTEST_TMP"
-cd "$AUTOPKGTEST_TMP"/tests
+cp -r tests "$AUTOPKGTEST_TMP/upstream-runtime-tests-isolation"
+cd "$AUTOPKGTEST_TMP/upstream-runtime-tests-isolation"
+
 make run
 
 # Save all test output files so that they can be accessed from ci.debian.net
-cp -r keyctl "$AUTOPKGTEST_ARTIFACTS"
+cp -r keyctl "$AUTOPKGTEST_ARTIFACTS/upstream-runtime-tests-isolation"
