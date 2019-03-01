@@ -1,3 +1,12 @@
+keyutils (1.6-5) unstable; urgency=medium
+
+  * d/tests:
+    - Save all output to $AUTOPKGTEST_ARTIFACTS
+  * d/tests:
+    - Run individual tests in AUTOPKGTEST_TMP subdirs, just in case
+
+ -- Christian Kastner <ckk@debian.org>  Fri, 01 Mar 2019 15:47:59 +0100
+
 keyutils (1.6-4) unstable; urgency=medium
 
   * d/tests: upstream-runtime-tests: Fix broken option value
