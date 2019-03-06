@@ -8,8 +8,10 @@ set -e
 cp -r tests "$AUTOPKGTEST_TMP/upstream-runtime-tests"
 cd "$AUTOPKGTEST_TMP/upstream-runtime-tests"
 
-# Skip tests requiring /sbin/request-key
-make SKIPINSTALLREQ=yes run
+# Skip tests requiring either root or /sbin/request-key, as they don't work
+# with some container solutions due to their close interaction with the kernel.
+# See #923156
+make SKIPROOTREQ=yes SKIPINSTALLREQ=yes run
 
 # Save all test output files so that they can be accessed from ci.debian.net
 cp -r keyctl "$AUTOPKGTEST_ARTIFACTS/upstream-runtime-tests"
