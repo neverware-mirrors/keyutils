@@ -1,12 +1,13 @@
 #!/bin/sh
 # Run upstream runtime tests
 # Assumes $AUTOPKGTEST_TMP is set, see /usr/share/doc/autopkgtest/README.package-tests.gz
-set -e
 
 # We just copy and run the entire test suite to resp. from the $AUTOPKGTEST_TMP
 # directory because it generates output within each test's source directory.
+set -e
 cp -r tests "$AUTOPKGTEST_TMP/upstream-runtime-tests-isolation"
 cd "$AUTOPKGTEST_TMP/upstream-runtime-tests-isolation"
+set +e
 
 # Clean out tests not requiring machine-isolation, as these are performed by
 # upstream-runtime-tests
