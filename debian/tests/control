@@ -1,5 +1,5 @@
 Tests: upstream-runtime-tests
-Restrictions: allow-stderr needs-root
+Restrictions: allow-stderr
 Depends: keyutils, lsb-release, file
 
 Tests: upstream-runtime-tests-isolation
