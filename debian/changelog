@@ -1,3 +1,20 @@
+keyutils (1.6-6) unstable; urgency=medium
+
+  * d/tests:
+     - Use set -e only for test setup
+     - upstream-runtime-tests
+       + Skip tests requiring root
+         They don't work with some container solutions due to their close
+         interaction with the kernel. These tests are moved to
+         upstream-runtime-test-isolation. (Closes: #923156)
+       + Drop needs-root restriction
+     - upstream-runtime-tests-isolation
+       + Drop redundant tests
+         Clean out tests not requiring machine-isolation, as these are
+         performed by the test upstream-runtime-tests.
+
+ -- Christian Kastner <ckk@debian.org>  Wed, 06 Mar 2019 17:18:19 +0100
+
 keyutils (1.6-5) unstable; urgency=medium
 
   * d/tests:
